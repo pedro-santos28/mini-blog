@@ -14,7 +14,7 @@ public class Post
     [Column(TypeName = "varchar(100)")]
 
 
-    public IFormFile Image { get; set; }
+    public string Image { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

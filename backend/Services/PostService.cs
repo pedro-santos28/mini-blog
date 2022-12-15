@@ -21,7 +21,7 @@ public class PostService
             Title = postRequestDTO.Title,
             Category = postRequestDTO.Category,
             Description = postRequestDTO.Description,
-            Image = postRequestDTO.Image,
+            Image = postRequestDTO.Image.FileName,
             CreatedAt = DateTime.Now
         };
 

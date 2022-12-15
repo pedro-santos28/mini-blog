@@ -14,6 +14,8 @@ public class PostController : ControllerBase
     //     _postService = service;
     // }
 
+    private readonly string _PastaDeUpload = @"C:\Users\pedro\Área de Trabalho\dev\react\mini-blog\frontend\public\uploads";
+
     [HttpPost("/post")]
     public async Task<IActionResult> CreatePost(
         [FromForm] PostRequestDTO postRequestDTO,
@@ -25,9 +27,11 @@ public class PostController : ControllerBase
             return Content("Nenhum arquivo selecionado");
 
         // Obtém o caminho para salvar o arquivo
-        var filePath = Path.Combine(
-            Directory.GetCurrentDirectory(), "wwwroot",
-            "files", postRequestDTO.Image.FileName);
+        // var filePath = Path.Combine(
+        //     Directory.GetCurrentDirectory(), "wwwroot",
+        //     "files", postRequestDTO.Image.FileName);
+
+        var filePath = Path.Combine(_PastaDeUpload, postRequestDTO.Image.FileName);
 
         // Obtém o caminho do diretório
         var directoryPath = Path.GetDirectoryName(filePath);
@@ -35,6 +39,8 @@ public class PostController : ControllerBase
         // Cria o diretório, se ele ainda não existir
         if (!Directory.Exists(directoryPath))
             Directory.CreateDirectory(directoryPath);
+
+        //directoryPath+
 
         try
         {

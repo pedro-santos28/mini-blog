@@ -16,6 +16,7 @@ function App() {
         <div className="container">
           <Rotas></Rotas>
           <ToastContainer />
+          <img src="uploads/gato1.jpg" alt="" />
         </div>
         <Footer></Footer>
       </BrowserRouter>
