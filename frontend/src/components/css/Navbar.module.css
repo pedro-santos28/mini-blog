@@ -28,7 +28,24 @@
     padding: .4em .6em;
 }
 
-.active {
+.active{
     background-color: #000;
     color: white;
+}
+
+button{
+    border: none;
+    color: #000;
+    transition: 0.4s;
+    font-size: 1em;
+    cursor: pointer;
+    font-family: "Montserrat", sans-seri;
+    background-color: transparent;
+}
+button:hover{
+    cursor: pointer;
+}
+
+.logout_icon{
+    cursor: pointer;
 }

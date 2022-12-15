@@ -107,7 +107,6 @@ public class UserService
         //Senha precisa ter um digito, uma uppercase letter e um alfanumérico
 
         UserResponseDTO userResponseDTO = user.Adapt<UserResponseDTO>();
-        userResponseDTO.Created = true;
         return userResponseDTO;
     }
 

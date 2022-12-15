@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import styles from './Signup.module.css';
 import useFetch from '../../hooks/useFetch';
 
+
 const schema = yup.object().shape({
   nome: yup.string().required('O campo nome é obrigatório'),
   email: yup
@@ -90,7 +91,6 @@ const Signup = () => {
           {errors.senhaConfirmacao?.message}
         </p>
       </label>
-
       <input className="btn" type="submit" />
     </form>
   );

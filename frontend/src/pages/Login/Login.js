@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styles from './Login.module.css';
 import useFetch from '../../hooks/useFetch';
-import { toast } from 'react-toastify';
+import { AuthContext } from '../../context/AuthContext';
 
 const Login = () => {
   const schema = yup.object().shape({
@@ -26,26 +25,27 @@ const Login = () => {
   });
 
   const url = 'https://localhost:7109/signin';
-  const navigate = useNavigate();
-
-  // hook user fetch (responssável pelas requisições)
-  const { dataResponse, requestConfig } = useFetch(url);
+  const { requestConfig } = useFetch(url);
+  const { state } = useContext(AuthContext);
 
   const onSubmit = (data) => {
-    const loginData = {
+    const body = {
       userName: data.nome,
       senha: data.senha,
     };
 
-    requestConfig(loginData, 'POST', 'signin');
+    requestConfig(body, 'POST', 'signin');
   };
+
+  if (state) {
+    console.log(state);
+  }
 
   const onInvalid = (errors) => console.error(errors);
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <h3>Página de log-in</h3>
-
       <label>
         <span>Nome</span>
         <input

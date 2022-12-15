@@ -97,6 +97,7 @@ public class UserController : ControllerBase
         try
         {
             var LoginResponseDTO = await _userService.SignIn(loginRequestDTO);
+            // Console.WriteLine(LoginResponseDTO);
             return StatusCode(200, LoginResponseDTO);
         }
         catch (Exception e)

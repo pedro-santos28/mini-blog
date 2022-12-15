@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 export const useFetch = (url) => {
+  const { setAuthentication } = useContext(AuthContext);
   const [dataResponse, setDataResponse] = useState(null);
   const [config, setConfig] = useState(null);
   const [method, setMethod] = useState(null);
@@ -11,7 +13,6 @@ export const useFetch = (url) => {
   const [itemId, setItemId] = useState('');
   const [PostActionState, setPostActionState] = useState('');
   const navigate = useNavigate();
-  //   const [callFetch, setCallFetch] = useState('');
 
   // Funções
   const requestConfig = (content, method, PostActionState) => {
@@ -24,7 +25,7 @@ export const useFetch = (url) => {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(content),
       });
-    } else if (method == 'DELETE') {
+      } else if (method == 'DELETE') {
       setConfig({
         method,
         headers: { 'content-type': 'application/json' },
@@ -56,18 +57,22 @@ export const useFetch = (url) => {
         setLoading(false);
       }
 
-      // POST METHOD
+      // POST METHOD FOR USERS
       else if (method === 'POST' && PostActionState === 'signin') {
         const response = await fetch(url, config);
+        // const responseJson = await response.json();
         if (response.ok) {
+          setAuthentication(true);
           toast.success('Logado com sucesso!');
           navigate('/');
         } else {
           toast.error('Credenciais inválidas!');
         }
-      } else if (method === 'POST' && PostActionState === 'signup') {
+      }
+      // POST METHOD FOR USERS
+      else if (method === 'POST' && PostActionState === 'signup') {
         const response = await fetch(url, config);
-        console.log(response);
+
         if (response.ok) {
           toast.success('Conta criada com sucesso!');
           navigate('/login');
@@ -76,10 +81,23 @@ export const useFetch = (url) => {
         }
       }
 
+      //CONVENTIONAL POST
+      else if (method === 'POST') {
+        const response = await fetch(url, config);
+        // const responseJson = await response.json();
+        console.log(response);
+        if (response.ok) {
+          toast.success('Postagem criada com sucesso!');
+          // navigate('/');
+        } else {
+          toast.error('Erro ao criar postagem!');
+        }
+      }
+
       // DELETE METHOD
       else if (method === 'DELETE') {
         const deleteUrl = `${url}/${itemId}`;
-        const response = await fetch(deleteUrl, config);
+        await fetch(deleteUrl, config);
       }
 
       // PUT METHOD
