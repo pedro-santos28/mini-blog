@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styles from './Login.module.css';
-import useFetch from '../../hooks/useFetch';
-import { AuthContext } from '../../context/AuthContext';
-
+import useFetchUser from '../../hooks/UserRelated/useFetchUser';
+import { api } from '../../utils/url';
 const Login = () => {
   const schema = yup.object().shape({
     nome: yup.string().required('O campo de nome é obrigatório'),
@@ -24,10 +23,7 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const url = 'https://localhost:7109/signin';
-  const { requestConfig } = useFetch(url);
-  const { state } = useContext(AuthContext);
-
+  const { requestConfig } = useFetchUser(api + '/signin');
   const onSubmit = (data) => {
     const body = {
       userName: data.nome,
@@ -36,10 +32,6 @@ const Login = () => {
 
     requestConfig(body, 'POST', 'signin');
   };
-
-  if (state) {
-    console.log(state);
-  }
 
   const onInvalid = (errors) => console.error(errors);
 
@@ -68,7 +60,7 @@ const Login = () => {
         </p>
       </label>
 
-      <input type="submit" className="btn" />
+      <input type="submit" className="btn" value="Entrar" />
     </form>
   );
 };

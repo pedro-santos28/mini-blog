@@ -3,9 +3,8 @@ import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styles from './Signup.module.css';
-import useFetch from '../../hooks/useFetch';
-
-
+import useFetchUser from '../../hooks/UserRelated/useFetchUser';
+import { api } from '../../utils/url';
 const schema = yup.object().shape({
   nome: yup.string().required('O campo nome é obrigatório'),
   email: yup
@@ -22,11 +21,9 @@ const schema = yup.object().shape({
     .required('O campo Confirmação de senha é obrigatório'),
 });
 
-const url = 'https://localhost:7109/signup';
-
 const Signup = () => {
   // hook user fetch (responssável pelas requisições)
-  const { dataResponse, requestConfig } = useFetch(url);
+  const { requestConfig } = useFetchUser(api + '/signup');
 
   // Hook user form
   const {

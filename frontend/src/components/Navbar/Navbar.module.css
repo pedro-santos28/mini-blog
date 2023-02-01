@@ -1,0 +1,52 @@
+.navbar {
+    display: flex;
+    box-shadow: rgba(0, 0, 0, .15) 0px -2px 10px 0px;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-height: 10vh;
+}
+
+.brand {
+    font-size: 1.2em;
+}
+
+.brand span {
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.links_list {
+    display: flex;
+    list-style: none;
+    padding: 10px;
+    gap: 0 20px;
+}
+
+.links_list a {
+    padding: .4em .6em;
+}
+
+.active{
+    background-color: #000;
+    color: white;
+    border-radius: 5px;
+    transition: 0.5s ease-in;
+}
+
+button{
+    border: none;
+    color: #000;
+    transition: 0.4s;
+    font-size: 1em;
+    cursor: pointer;
+    font-family: "Montserrat", sans-seri;
+    background-color: transparent;
+}
+button:hover{
+    cursor: pointer;
+}
+
+.logout_icon{
+    cursor: pointer;
+}

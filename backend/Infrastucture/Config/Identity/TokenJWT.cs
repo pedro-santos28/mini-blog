@@ -1,7 +1,6 @@
 ﻿
 using System.IdentityModel.Tokens.Jwt;
 
-
 namespace backend.Infrastructure.Config.Identity
 {
     public class TokenJWT

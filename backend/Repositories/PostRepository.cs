@@ -1,5 +1,6 @@
 using backend.Context;
 using backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories;
 
@@ -25,5 +26,29 @@ public class PostRepository
         {
             throw ex;
         }
+    }
+
+    public async Task<List<Post>> GetPosts()
+    {
+        List<Post> listPost = await _context.Post.AsNoTracking().ToListAsync();
+        return listPost;
+    }
+
+    public async Task<Post> GetPost(int id)
+    {
+        Post Post = await _context.Post.AsNoTracking().FirstOrDefaultAsync(Post => Post.Id == id);
+        return Post;
+    }
+
+    public async Task<Boolean> DeletePost(Post post)
+    {
+        _context.Remove(post);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+    public void EditPost(Post post)
+    {
+        _context.Update(post);
+        _context.SaveChanges();
     }
 }

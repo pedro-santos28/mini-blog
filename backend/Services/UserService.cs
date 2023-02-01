@@ -7,8 +7,7 @@ using backend.DTOs.User;
 using Mapster;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
+using backend.Infrastructure.Config.Identity;
 
 namespace backend.Services;
 
@@ -17,7 +16,6 @@ public class UserService
     private readonly UserRepository _userRepository;
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
     //identity dependencies
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
@@ -74,7 +72,6 @@ public class UserService
         {
             var userResponseDTO1 = new UserResponseDTO();
             return userResponseDTO1;
-            // throw new ArgumentException("Este usuário já existe!");
         }
 
         var emailExists = await _userManager.FindByEmailAsync(userRequestDTO.Email);
@@ -83,13 +80,11 @@ public class UserService
             var userResponseDTO1 = new UserResponseDTO();
             return userResponseDTO1;
         }
-        // throw new ArgumentException("Este email já existe!");
 
         if (string.IsNullOrWhiteSpace(userRequestDTO.UserName) || string.IsNullOrWhiteSpace(userRequestDTO.Senha))
         {
             var userResponseDTO1 = new UserResponseDTO();
             return userResponseDTO1;
-            // throw new ArgumentException("Credenciais inválidas");
         }
 
         var user = new User
@@ -110,8 +105,7 @@ public class UserService
         return userResponseDTO;
     }
 
-
-    public async Task<LoginResponseDTO> SignIn(LoginRequestDTO loginRequestDTO)
+    public async Task<TokenJWT> SignIn(LoginRequestDTO loginRequestDTO)
     {
         var user = await _userManager.FindByNameAsync(loginRequestDTO.UserName);
         if (user == null)
@@ -122,8 +116,7 @@ public class UserService
 
         var userRoles = await _userManager.GetRolesAsync(user);
 
-        var authClaims = new List<Claim>
-            {
+        var authClaims = new List<Claim>{
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
@@ -135,24 +128,21 @@ public class UserService
             authClaims.Add(new Claim(ClaimTypes.Role, userRole));
         }
 
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+        var token = new TokenJWTBuilder()
+            .AddSecurityKey(JwtSecurityKey.Create("Secret_Key-12345678"))
+            .AddSubject("Pedro - Developer")
+            .AddIssuer("Teste.Securiry.Bearer")
+            .AddAudience("Teste.Securiry.Bearer")
+            .AddExpiry(5)
+            .Builder();
 
-        var token = new JwtSecurityToken(
-            issuer: _configuration["JWT:ValidIssuer"],
-            audience: _configuration["JWT:ValidAudience"],
-            expires: DateTime.Now.AddHours(3),
-            claims: authClaims,
-            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-            );
-
-        return new LoginResponseDTO(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
+        return token;
     }
 
     public async Task<User> GetCurrentUser()
     {
-        var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User); // Get user id:
+        var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
         User user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
         return user;
     }
-
 }

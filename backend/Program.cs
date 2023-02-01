@@ -1,22 +1,21 @@
 using System.Text;
 using backend.Context;
 using backend.DTOs;
+using backend.Extension;
+using backend.Infrastructure.Config.Identity;
 using backend.Models;
-using backend.Repositories;
-using backend.Services;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the dependency container.
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<PostService>();
-builder.Services.AddScoped<PostRepository>();
+builder.Services.AddServices();
+builder.Services.AddRepository();
 
 // Identity dependency injection
 builder.Services.AddIdentity<User, UserRole>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -33,7 +32,6 @@ TypeAdapterConfig<User, UserResponseDTO>
             .NewConfig()
             .IgnoreNullValues(true);
 
-
 builder.Services.AddControllers();
 
 //Adding JWT and setting up the token
@@ -43,34 +41,71 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+});
 
-
-// Adding Jwt Bearer  
-.AddJwtBearer(options =>
+//middleware
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(option =>
 {
-
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
+    option.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+        ValidIssuer = "Teste.Securiry.Bearer",
+        ValidAudience = "Teste.Securiry.Bearer",
+        IssuerSigningKey = JwtSecurityKey.Create("Secret_Key-12345678")
+    };
 
-        ValidateLifetime = true
+    option.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
+            return Task.CompletedTask;
+        }
     };
 });
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "apiagenda", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Header de autorização JWT usando o esquema Bearer.\r\n\r\nInforme 'Bearer'[espaço] e o seu token.\r\n\r\nExamplo: 'Bearer 12345abcdef'",
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+       {
+          new OpenApiSecurityScheme
+          {
+             Reference = new OpenApiReference
+             {
+                 Type = ReferenceType.SecurityScheme,
+                 Id = "Bearer"
+             }
+          },
+          new string[] {}
+       }
+    });
+});
 
 var app = builder.Build();
 
@@ -93,7 +128,6 @@ app.UseCors(c =>
 #endregion
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 

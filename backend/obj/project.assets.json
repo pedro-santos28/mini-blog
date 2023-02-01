@@ -3484,11 +3484,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\pedro\\Área de Trabalho\\dev\\react\\mini-blog\\backend\\backend.csproj",
+      "projectUniqueName": "C:\\Users\\pedro\\Área de Trabalho\\dev\\react\\mini-blog\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "c:\\Users\\pedro\\Área de Trabalho\\dev\\react\\mini-blog\\backend\\backend.csproj",
+      "projectPath": "C:\\Users\\pedro\\Área de Trabalho\\dev\\react\\mini-blog\\backend\\backend.csproj",
       "packagesPath": "C:\\Users\\pedro\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\pedro\\Área de Trabalho\\dev\\react\\mini-blog\\backend\\obj\\",
+      "outputPath": "C:\\Users\\pedro\\Área de Trabalho\\dev\\react\\mini-blog\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pedro\\AppData\\Roaming\\NuGet\\NuGet.Config"

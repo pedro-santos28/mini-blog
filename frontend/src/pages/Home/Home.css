@@ -1,0 +1,30 @@
+.container{
+    margin: 0 auto;
+    color: #232323;
+    min-height: 80vh;
+    height: 100%;
+    /* display: grid; */
+}
+
+.content{
+    max-width: 650px;
+    width: 100%;
+}
+
+.container > h1{
+    text-align: center;
+}
+
+.title{
+    text-align: center;
+}
+.card{
+    /* display: grid;
+    grid-template-columns: repeat(2,1fr); */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+}
+
