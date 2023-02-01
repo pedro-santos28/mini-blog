@@ -69,6 +69,7 @@ public class PostService
         if (post != null)
         {
             postRequestDTO.Adapt(post);
+            post.Image = postRequestDTO.Image.FileName;
             _postRepository.EditPost(post);
             PostResponseDTO postResponseDTO = post.Adapt<PostResponseDTO>();
             return postResponseDTO;

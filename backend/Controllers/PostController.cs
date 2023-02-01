@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers;
 
 [ApiController]
-// [Authorize]
+[Authorize]
 [Route("post")]
 public class PostController : ControllerBase
 {
@@ -108,6 +108,8 @@ public class PostController : ControllerBase
         // Verifica se o arquivo foi enviado
         if (postRequestDTO.Image == null || postRequestDTO.Image.Length == 0)
             return StatusCode(500, "Nenhum arquivo selecionado");
+
+        Console.WriteLine("IMAGE SENT:" + postRequestDTO.Image.FileName);
 
         // Obtém o caminho para salvar o arquivo
         var filePath = Path.Combine(_pastaDeUpload, postRequestDTO.Image.FileName);
