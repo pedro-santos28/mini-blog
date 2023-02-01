@@ -6,8 +6,9 @@ import useFetchPost from '../../hooks/PostRelated/useFetchPost';
 import { api } from '../../utils/url';
 import { Pencil, X } from 'phosphor-react';
 
-const Modal = ({ id, title }) => {
+const Modal = ({ id, post }) => {
   const { requestConfig } = useFetchPost(`${api}/post/${id}`);
+
   const onSubmit = async (data, e) => {
     e.preventDefault();
     try {
@@ -32,7 +33,7 @@ const Modal = ({ id, title }) => {
       </AlertDialog.Trigger>
       <AlertDialog.Portal>
         <AlertDialog.Content className={styles.AlertDialogContent}>
-          <EditFormPost onSubmit={onSubmit} title={'Editar post'} />
+          <EditFormPost post={post} onSubmit={onSubmit} title={'Editar post'} />
           <div
             style={{
               display: 'flex',

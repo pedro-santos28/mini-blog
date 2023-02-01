@@ -8,6 +8,14 @@ export function AuthProvider({ children }) {
   const [authentication, setAuthentication] = useState(false);
   const [JWTKey, setJWTKey] = useState('');
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem('JWTKey');
+    setJWTKey(storedValue);
+    if (storedValue) {
+      setAuthentication(true);
+    }
+  }, []);
+
   const fetcher = (...args) =>
     fetch(...args, { headers: { Authorization: `Bearer ${JWTKey}` } }).then(
       (res) => res.json()
@@ -18,15 +26,6 @@ export function AuthProvider({ children }) {
     fetcher
   );
 
-  useEffect(() => {
-    const storedValue = localStorage.getItem('JWTKey');
-
-    if (storedValue) {
-      setAuthentication(true);
-      console.log('logado');
-      console.log(authentication);
-    }
-  }, []);
   return (
     <AuthContext.Provider
       value={{

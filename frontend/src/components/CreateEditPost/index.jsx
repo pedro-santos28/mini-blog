@@ -4,12 +4,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styles from './CreatePost.module.css';
 
-const index = ({ onSubmit, title }) => {
+const index = ({ onSubmit, title, post }) => {
   const schema = yup.object().shape({
     title: yup.string().required('O campo Titulo é obrigatório'),
     category: yup.string().required('O campo Categoria é obrigatório'),
     description: yup.string().required('O campo Descrição é obrigatório'),
   });
+
+  console.log(post);
 
   const {
     register,
@@ -27,7 +29,11 @@ const index = ({ onSubmit, title }) => {
       <h3>{title}</h3>
       <label>
         <span>Titulo</span>
-        <input placeholder="Digite o titulo" {...register('title')} />
+        <input
+          placeholder="Digite o titulo"
+          {...register('title')}
+          value={post?.title}
+        />
         <p className={errors.title ? styles.erro : ''}>
           {errors.title?.message}
         </p>
@@ -38,6 +44,7 @@ const index = ({ onSubmit, title }) => {
           type="text"
           placeholder="Digite a categoria"
           {...register('category')}
+          value={post?.category}
         />
         <p className={errors.category ? styles.erro : ''}>
           {errors.category?.message}
@@ -48,6 +55,7 @@ const index = ({ onSubmit, title }) => {
         <textarea
           placeholder="Descreva o conteudo do post"
           {...register('description')}
+          value={post?.description}
         />
         <p className={errors.description ? styles.erro : ''}>
           {errors.description?.message}

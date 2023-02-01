@@ -33,7 +33,7 @@ const index = () => {
                     </NavLink>
                   </td>
                   <td>
-                    <EditModal id={post.id} />
+                    <EditModal id={post.id} post={post} />
                   </td>
                   <td>
                     <DeleteModal id={post.id} />

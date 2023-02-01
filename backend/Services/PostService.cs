@@ -1,3 +1,4 @@
+using System.Globalization;
 using backend.DTOs.Post;
 using backend.Models;
 using backend.Repositories;
@@ -16,14 +17,20 @@ public class PostService
 
     public async Task<PostResponseDTO> CreatePost(PostRequestDTO postRequestDTO)
     {
-        Post post = new Post
-        {
-            Title = postRequestDTO.Title,
-            Category = postRequestDTO.Category,
-            Description = postRequestDTO.Description,
-            Image = postRequestDTO.Image.FileName,
-            CreatedAt = DateTime.Now,
-        };
+        // Post post = new Post
+        // {
+        //     Title = postRequestDTO.Title,
+        //     Category = postRequestDTO.Category,
+        //     Description = postRequestDTO.Description,
+        //     Image = postRequestDTO.Image.FileName,
+        //     CreatedAt = DateTime.Now,
+        // };
+
+        Post post = postRequestDTO.Adapt<Post>();
+        post.Image = postRequestDTO.Image.FileName;
+        var dataAtual = DateTime.Now;
+        string formattedDate = dataAtual.ToString("d", CultureInfo.CreateSpecificCulture("pt-BR"));
+        post.CreatedAt = DateTime.ParseExact(formattedDate, "d", CultureInfo.CreateSpecificCulture("pt-BR"));
 
         var resultado = await _postRepository.CreatePost(post);
 
